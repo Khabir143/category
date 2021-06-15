@@ -9,6 +9,8 @@
     // echo "The connection is alright";
   }else{
     echo"Connection is error";
+
+    ob_start();
   }
 
 
@@ -26,6 +28,8 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
 
     <title>Ticket</title>
+
+    <link rel="stylesheet" type="text/css" href="css/tyle.css">
   </head>
   <body>
     <center>
@@ -52,9 +56,7 @@
   <input type="submit" class="btn btn-primary" name="add_cat" value="add Category">
            </form>
 
-
-        </div>
-      <?php
+            <?php
 
     if(isset($_POST['add_cat'])){
          
@@ -70,7 +72,7 @@
 
        if($result){
 
-        echo "value inserted";
+        // echo "value inserted";
        }else{
 
         echo "error";
@@ -84,24 +86,33 @@
 
    ?>
 
+</div>
+        
+     
+
         <div class="col-md-6">
-          <table class="table">
+          <table class="table  table-dark table-striped table-hover">
   <thead>
     <tr>
-      <th scope="col">Number</th>
+      <th scope="col">#</th>
       <th scope="col">Category</th>
       <th scope="col">Description</th>
-      <th scope="col">Handle</th>
+      <th scope="col">Action</th>
+     
     </tr>
   </thead>
   <tbody>
 
    <?php
 
-          $count=0;
+         
     $sql2 ="SELECT * FROM category";
     $result = mysqli_query($db,$sql2);
+
+     $count=0;
+
           while($val = mysqli_fetch_assoc($result)){
+              $id= $val['c_id'];
              $name= $val['c_name'];
             $desc=$val['c_desc'];
             $count++;
@@ -112,10 +123,17 @@
       <th scope="row"><?php echo $count; ?></th>
       <td><?php echo $name; ?></td>
       <td><?php echo $desc; ?></td>
-     
+      <td><a href="" class="badge bg-primary"><span>Edit</span> </a>
+
+      <a href="index.php?delete_id=<?php echo $id;?>" class="badge bg-danger"> 
+
+        <span>Delete</span> 
+      </a> 
+
+      </td>
     </tr>
          <?php  
-
+ 
 
 
          }  
@@ -134,13 +152,49 @@
       </div>
       
     </div>
+     
 
-   
+             <?php
+
+     if(isset($_GET['delete_id'])){
+
+      $del=$_GET['delete_id'];
+     
+       
+       $sql3 = "DELETE FROM category WHERE c_id='$del'";
+
+        $result=mysqli_query($db,$sql3);
+
+        if($result){
+
+          header('location: index.php');
+        }else{
+
+          echo"error";
+        }
+
+
+
+     }
+ 
+
+
+             ?>
+  
+        
+
 
 
    
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4" crossorigin="anonymous"></script>
 
     
+<?php
+
+ob_end_flush();
+
+?>
+
+
   </body>
 </html>
